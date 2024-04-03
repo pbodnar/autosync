@@ -3,13 +3,17 @@
 A simple bash script which lets you _automatically_ synchronize one or more directories to a target folder
 whenever files in the watched directories change.
 
+This is a much more primitive variant of the [lsyncd][lsyncd] tool.
+Unlike `lsyncd` though, this script can also run in Cygwin terminal or in Git Bash on Windows.
+
 ## Installation
 
 1. Download the `autosyncdir.sh` script to any directory on your PC.
    You can also do that by Git-cloning the whole project.
-2. Put the script's directory to the system PATH, so that you can run it easily just by its name.
-3. The script expects that there are already `inotifywait` and `rsync` in the system PATH
+2. The script relies on `inotifywait` and `rsync`.
+   Parent directories of these programs need to be in the system PATH
    (see script's source code for more details).
+3. Put the script's directory to the system PATH, so that you can run it easily just by its name.
 
 ## Usage
 
@@ -47,3 +51,5 @@ autosyncdir.sh ~/project2/env/devel $server_cfg/project2 &
 
 wait
 ```
+
+[lsyncd]: hhtps://github.com/lsyncd/lsyncd

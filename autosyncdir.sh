@@ -7,8 +7,9 @@
 #
 # Prerequisites:
 #
-# * `inotifywait` in PATH. Needs to be downloaded/built from https://github.com/thekid/inotify-win on Windows.
-# * `rsync` in PATH. Can be installed via Cygwin on Windows.
+# * `inotifywait` in PATH. For Windows, it needs to be downloaded/built from https://github.com/thekid/inotify-win.
+# * `rsync` in PATH. Fow Windows, it can be installed via/into Cygwin, or downloaded from
+#   [MSYS2](https://stackoverflow.com/questions/75752274/rsync-for-windows-that-runs-with-git-for-windows-mingw-tools).
 
 # Stop on any error
 set -e
@@ -17,6 +18,7 @@ set -e
 if [ "$#" -lt 2 ]; then
     echo "Not enough arguments."
     echo "Usage: $0 SRC [SRC]... DEST"
+    echo "All the arguments are passed unmodified to rsync, so just run 'rsync --help' to get information about the possible DEST argument variations."
     exit 1
 fi
 
