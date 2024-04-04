@@ -26,6 +26,10 @@ fi
 last_arg=${@:$#}
 first_args=("${@:1:$#-1}")
 
+# Overridable options to be passed to inotifywait and rsync
+INOTIFYWAIT_OPTS=${INOTIFYWAIT_OPTS:-"-r"}
+RSYNC_OPTS=${RSYNC_OPTS:-"-avz"}
+
 # Make the main loop interruptible by handling Ctrl+C
 function handle_sigint() {
     echo "Script terminated by user."
@@ -36,6 +40,6 @@ trap handle_sigint SIGINT
 # Main loop
 echo "Starting the sync loop"
 while true; do 
-    inotifywait -r "${first_args[@]}"
-    rsync -avz "${first_args[@]}" "$last_arg"
+    inotifywait $INOTIFYWAIT_OPTS "${first_args[@]}"
+    rsync $RSYNC_OPTS "${first_args[@]}" "$last_arg"
 done

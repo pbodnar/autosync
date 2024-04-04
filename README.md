@@ -52,4 +52,20 @@ autosyncdir.sh ~/project2/env/devel $server_cfg/project2 &
 wait
 ```
 
+### Passing custom options to inotifywait and rsync
+
+You can override options which are passed by the script to `inotifywait` and `rsync`
+by setting environment variables as in the following example.
+
+```bash
+# default: "-r"
+export INOTIFY_OPTS=" "
+
+# WARNING: Be careful with the --delete option, as it will delete missing files in the target directory!
+# default: "-avz"
+export RSYNC_OPTS="-avz --delete"
+
+autosyncdir.sh /path/to/source_dir /path/to/target_dir
+```
+
 [lsyncd]: hhtps://github.com/lsyncd/lsyncd
