@@ -26,10 +26,10 @@ Press <kbd>Ctrl+C</kbd> at any time to terminate the script.
 You can run the script directly for an ad-hoc usage, e.g.:
 
 ```text
-$ autosyncdir.sh /path/to/source_dir1 /path/to/source_dir2 /path/to/target_dir
+$ autosyncdir.sh /path/to/source_dir1/ /path/to/source_dir2/ /path/to/target_dir
 Starting the sync loop
-===> Watching /path/to/source_dir1 -r*.* for create, modify, delete, move
-===> Watching /path/to/source_dir2 -r*.* for create, modify, delete, move
+===> Watching /path/to/source_dir1/ -r*.* for create, modify, delete, move
+===> Watching /path/to/source_dir2/ -r*.* for create, modify, delete, move
 ```
 
 ### Persisted script usage
@@ -46,8 +46,8 @@ Here is an example of such a script (name it e.g. `sync_my_dirs.sh`):
 
 server_cfg=~/server/cfg
 
-autosyncdir.sh ~/project1/env/devel $server_cfg/project1 &
-autosyncdir.sh ~/project2/env/devel $server_cfg/project2 &
+autosyncdir.sh ~/project1/env/devel/ $server_cfg/project1 &
+autosyncdir.sh ~/project2/env/devel/ $server_cfg/project2 &
 
 wait
 ```
@@ -58,11 +58,11 @@ You can override options which are passed by the script to `inotifywait` and `rs
 by setting environment variables as in the following example.
 
 ```bash
-# default: "-r"
+# default: "-r" (recursive)
 export INOTIFY_OPTS=" "
 
 # WARNING: Be careful with the --delete option, as it will delete missing files in the target directory!
-# default: "-avz"
+# default: "-avz" (archive, verbose, compress)
 export RSYNC_OPTS="-avz --delete"
 
 autosyncdir.sh /path/to/source_dir /path/to/target_dir
