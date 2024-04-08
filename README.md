@@ -27,7 +27,13 @@ You can run the script directly for an ad-hoc usage, e.g.:
 
 ```text
 $ autosyncdir.sh /path/to/source_dir1/ /path/to/source_dir2/ /path/to/target_dir
-Starting the sync loop
+# Starting the sync loop
+# Syncing...
+sending incremental file list
+
+sent 98 bytes  received 12 bytes  220.00 bytes/sec
+total size is 13  speedup is 0.12
+# Waiting for changes...
 ===> Watching /path/to/source_dir1/ -r*.* for create, modify, delete, move
 ===> Watching /path/to/source_dir2/ -r*.* for create, modify, delete, move
 ```

@@ -38,8 +38,10 @@ function handle_sigint() {
 trap handle_sigint SIGINT
 
 # Main loop
-echo "Starting the sync loop"
-while true; do 
-    inotifywait $INOTIFYWAIT_OPTS "${first_args[@]}"
+echo "# Starting the sync loop"
+while true; do
+    echo "# Syncing..."
     rsync $RSYNC_OPTS "${first_args[@]}" "$last_arg"
+    echo "# Waiting for changes..."
+    inotifywait $INOTIFYWAIT_OPTS "${first_args[@]}"
 done
