@@ -8,8 +8,7 @@
 # Prerequisites:
 #
 # * `inotifywait` in PATH. For Windows, it needs to be downloaded/built from https://github.com/thekid/inotify-win.
-# * `rsync` in PATH. Fow Windows, it can be installed via/into Cygwin, or downloaded from
-#   [MSYS2](https://stackoverflow.com/questions/75752274/rsync-for-windows-that-runs-with-git-for-windows-mingw-tools).
+# * `rsync` in PATH. Fow Windows, it can be installed via/into Cygwin, or MSYS2.
 
 # Stop on any error
 set -e
@@ -18,13 +17,16 @@ set -e
 if [ "$#" -lt 2 ]; then
     echo "Not enough arguments."
     echo "Usage: $0 SRC [SRC]... DEST"
-    echo "All the arguments are passed unmodified to rsync, so just run 'rsync --help' to get information about the possible DEST argument variations."
+    echo "1) The SRC paths are passed unmodified to inotifywait."
+    echo "2) All the paths are passed to rsync, run 'rsync --help' to get information about the possible DEST variations."
+    echo "   On Windows, paths are converted to the Linux format via 'cygpath', before being passed to rsync."
+    echo "WARNING: The script will not work if the paths contain spaces."
     exit 1
 fi
 
 # We pass all but the last argument to inotifywait, we pass all arguments to rsync
-last_arg=${@:$#}
 first_args=("${@:1:$#-1}")
+all_args=("$@")
 
 # Overridable options to be passed to inotifywait and rsync
 INOTIFYWAIT_OPTS=${INOTIFYWAIT_OPTS:-"-r"}
@@ -37,11 +39,22 @@ function handle_sigint() {
 }
 trap handle_sigint SIGINT
 
+# Convert paths to Linux format if we are on Windows
+if [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+    # Just for the special case when using Cygwin's rsync from Git Bash (better use the MSYS2's there),
+    # see https://stackoverflow.com/questions/29941966/rsync-cwrsync-in-gitbash-the-source-and-destination-cannot-both-be-remote/67658259#67658259.
+    export MSYS_NO_PATHCONV=1
+
+    # Note: If the path doesn't look like a Windows path,
+    # cygpath will return it as is (which we want).
+    all_args=($(printf "%s\0" "${all_args[@]}" | xargs -0 cygpath))
+fi
+
 # Main loop
 echo "# Starting the sync loop"
 while true; do
     echo "# Syncing..."
-    rsync $RSYNC_OPTS "${first_args[@]}" "$last_arg"
+    rsync $RSYNC_OPTS "${all_args[@]}"
     echo "# Waiting for changes..."
     inotifywait $INOTIFYWAIT_OPTS "${first_args[@]}"
 done
