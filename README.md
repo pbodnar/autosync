@@ -106,7 +106,7 @@ by setting environment variables as in the following example.
 #!/bin/bash
 
 # default: "-r" (recursive)
-export INOTIFY_OPTS=" "
+export INOTIFYWAIT_OPTS=" "
 
 # WARNING: Be careful with the --delete option, as it will delete missing files in the target directory!
 # default: "-avz" (archive, verbose, compress)
