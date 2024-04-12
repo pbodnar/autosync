@@ -21,9 +21,31 @@ Simply run the script without any parameters in order to get the basic usage hel
 
 Press <kbd>Ctrl+C</kbd> at any time to terminate the script.
 
+_On Windows_, you will typically run the script from Git Bash ("a customized distro of MSYS2";
+part of Git for Windows), or Cygwin terminal.
+
 ### Ad-hoc script usage
 
-You can run the script directly for an ad-hoc usage, e.g.:
+You can run the script directly for an ad-hoc usage.
+
+_On Windows:_
+
+```text
+$ autosyncdir.sh 'c:\path\to\source_dir1\' 'c:\path\to\source_dir2\' 'c:\path\to\target_dir'
+$ # an alternative with forward slashes:
+$ # autosyncdir.sh c:/path/to/source_dir1/ c:/path/to/source_dir2/ c:/path/to/target_dir
+# Starting the sync loop
+# Syncing...
+sending incremental file list
+
+sent 98 bytes  received 12 bytes  220.00 bytes/sec
+total size is 13  speedup is 0.12
+# Waiting for changes...
+===> Watching c:\path\to\source_dir1\ -r*.* for create, modify, delete, move
+===> Watching c:\path\to\source_dir2\ -r*.* for create, modify, delete, move
+```
+
+_On Linux:_
 
 ```text
 $ autosyncdir.sh /path/to/source_dir1/ /path/to/source_dir2/ /path/to/target_dir
@@ -41,16 +63,33 @@ total size is 13  speedup is 0.12
 ### Persisted script usage
 
 Usually, you will want to prepare another script where you can persist
-what you need to synchronize.
+all what you need to synchronize.
 
-Here is an example of such a script (name it e.g. `sync_my_dirs.sh`):
+Here is an example of such a script (name it e.g. `sync_my_dirs.sh`).
+
+_On Windows:_
 
 ```bash
 #!/bin/bash
 
 # Starts to automatically watch and sync all my directories.
 
-server_cfg=~/server/cfg
+server_cfg='c:\server1\cfg'
+
+autosyncdir.sh 'c:\project1\env\devel\' $server_cfg'\project1' &
+autosyncdir.sh 'c:\project2\env\devel\' $server_cfg'\project2' &
+
+wait
+```
+
+_On Linux:_
+
+```bash
+#!/bin/bash
+
+# Starts to automatically watch and sync all my directories.
+
+server_cfg=~/server1/cfg
 
 autosyncdir.sh ~/project1/env/devel/ $server_cfg/project1 &
 autosyncdir.sh ~/project2/env/devel/ $server_cfg/project2 &
@@ -64,6 +103,8 @@ You can override options which are passed by the script to `inotifywait` and `rs
 by setting environment variables as in the following example.
 
 ```bash
+#!/bin/bash
+
 # default: "-r" (recursive)
 export INOTIFY_OPTS=" "
 

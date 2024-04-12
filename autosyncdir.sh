@@ -17,8 +17,9 @@ set -e
 if [ "$#" -lt 2 ]; then
     echo "Not enough arguments."
     echo "Usage: $0 SRC [SRC]... DEST"
-    echo "1) The SRC paths are passed unmodified to inotifywait."
-    echo "2) All the paths are passed to rsync, run 'rsync --help' to get information about the possible DEST variations."
+    echo "* Both SRC and DEST are paths, which can be relative or absolute."
+    echo "* The SRC paths are passed unmodified to inotifywait."
+    echo "* All the paths are passed to rsync, run 'rsync --help' to get information about the possible DEST variations."
     echo "   On Windows, paths are converted to the Linux format via 'cygpath', before being passed to rsync."
     echo "WARNING: The script will not work if the paths contain spaces."
     exit 1
